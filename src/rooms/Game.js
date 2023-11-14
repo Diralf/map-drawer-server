@@ -4,7 +4,7 @@ import { GameState } from "./schema/GameState.js";
 export class Game extends Room {
 
     //suppoort only 2 clients connected
-    maxClients = 2;
+    maxClients = 5;
 
     //determine what should happen when a room is created
     onCreate(options) {
