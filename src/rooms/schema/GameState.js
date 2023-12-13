@@ -22,10 +22,12 @@ export class GameState extends schema.Schema {
     super();
     this.host = "";
     this.board = "";
+    this.players = [];
   }
 }
 
 schema.defineTypes(GameState, {
   host: "string",
   board: "string",
+  players: ["string"],
 });

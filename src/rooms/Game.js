@@ -13,7 +13,6 @@ export class Game extends Room {
 
         //set a custom state from a created schema
         this.setState(new GameState());
-
         //when a message is received of type "message," broadcast it with the type "server-message" to all clients
         this.onMessage("message", (client, message) => {
             console.log("Game Room received message from", client.sessionId, ":", message);
@@ -33,21 +32,25 @@ export class Game extends Room {
 
     //determine what should happen when a client joins
     onJoin(client, options) {
-        if (!this.state.host) {
-            this.state.host = client.sessionId;
-            client.send("host", client.sessionId);
-            console.log(client.sessionId, "joined! As host");
-        } else {
-            client.send("client", client.sessionId);
-            client.send("board-exists", this.state.board);
-            console.log(client.sessionId, "joined! As client");
-        }
+        console.log(client.sessionId, "join!");
+        const players = [...(this.state.players || []), client.sessionId];
+        this.state.players = players;
+        // if (!this.state.host) {
+        //     this.state.host = client.sessionId;
+        //     client.send("host", client.sessionId);
+        //     console.log(client.sessionId, "joined! As host");
+        // } else {
+        //     client.send("client", client.sessionId);
+        //     client.send("board-exists", this.state.board);
+        //     console.log(client.sessionId, "joined! As client");
+        // }
         this.broadcast("server-message", `${client.sessionId} joined.`);
     }
 
     //determine what should happen when a client leaves
     onLeave(client, consented) {
         console.log(client.sessionId, "left!");
+        this.state.players = this.state.players.filter(player => player !== client.sessionId);
         this.broadcast("server-message", `${client.sessionId} left.`);
     }
 
